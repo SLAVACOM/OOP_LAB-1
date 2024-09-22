@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.util.Arrays;
 
 public class Triangle extends JPanel {
     private int[] xPoints, yPoints;
@@ -14,6 +15,15 @@ public class Triangle extends JPanel {
         this.color = color;
         setOpaque(false);
         setBounds(0, 0, CONSTANTS.WITH, CONSTANTS.HEIGHT);
+        this.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Triangle{" +
+                ", yPoints=" + Arrays.toString(yPoints) +
+                ", xPoints=" + Arrays.toString(xPoints) +
+                '}';
     }
 
     public void show(boolean isVisible) {
@@ -53,6 +63,11 @@ public class Triangle extends JPanel {
 
     public void rotate(int angle) {
         this.angle += angle;
+        repaint();
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
         repaint();
     }
 

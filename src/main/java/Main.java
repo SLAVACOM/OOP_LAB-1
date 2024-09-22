@@ -8,16 +8,24 @@ public class Main {
     private JFrame frame = new JFrame("Лабораторная работа №1");
 
     private JButton bBack = new JButton("Назад");
+
     private JButton bLine = new JButton("Линия");
     private JButton bCircle = new JButton("Окружность");
     private JButton bRectangle = new JButton("Прямоугольник");
     private JButton bTriangle = new JButton("Треугольник");
+
     private JButton bCreate = new JButton("Создать");
+    JButton bCreateSomeObject = new JButton("Создать несколько объектов");
     private JButton bMove = new JButton("Переместить");
+
+    private JButton bChangeColorAll = new JButton("Изменить цвет всех элементов");
     private JButton bDelete = new JButton("Удалить");
     private JButton bDeleteAll = new JButton("Удалить все");
+
     private JButton bChangeRadius = new JButton("Изменить радиус");
+
     private JButton bSetVisible = new JButton("Сделать видимым/невидимым");
+
     private JButton bChangeSize = new JButton("Изменить размер");
     private JButton bRotate = new JButton("Повернуть");
 
@@ -32,9 +40,6 @@ public class Main {
 
     private int selectedFigureType;
     private int selectedIndex = -1;
-
-    private boolean isVisibleLine = true, isVisibleCircle = true, isVisibleRectangle = true, isVisibleTriangle = true;
-
 
     public Main() {
         frame.setLayout(new BorderLayout());
@@ -60,11 +65,13 @@ public class Main {
         panel.add(bCircle);
         panel.add(bRectangle);
         panel.add(bTriangle);
+        panel.add(bDeleteAll);
 
         bLine.addActionListener(e -> switchToFigurePanel(1));
         bCircle.addActionListener(e -> switchToFigurePanel(2));
         bRectangle.addActionListener(e -> switchToFigurePanel(3));
         bTriangle.addActionListener(e -> switchToFigurePanel(4));
+
         bBack.addActionListener(e -> returnToMainPanel());
         bCreate.addActionListener(e -> createFigure());
         bMove.addActionListener(e -> moveSelectedFigure());
@@ -74,6 +81,16 @@ public class Main {
         bChangeRadius.addActionListener(e -> changeRadius());
 
         figureSelector.addActionListener(e -> selectedIndex = figureSelector.getSelectedIndex());
+
+        bCreateSomeObject.addActionListener(e -> {
+            int count = Integer.parseInt(JOptionPane.showInputDialog("Введите количество окружностей:"));
+            createMultipleObject(count);
+        });
+
+        bChangeColorAll.addActionListener(e -> {
+            Color newColor = JColorChooser.showDialog(null, "Выберите новый цвет", Color.GREEN);
+            changeColorOfAllObjects(newColor);
+        });
 
         return panel;
     }
@@ -86,9 +103,10 @@ public class Main {
         southPanel.add(bDelete);
         southPanel.add(bDeleteAll);
         southPanel.add(bSetVisible);
-
         southPanel.add(figureSelector);
 
+        southPanel.add(bCreateSomeObject);
+        southPanel.add(bChangeColorAll);
         switch (figureType) {
             case 1 -> {
                 southPanel.add(bRotate);
@@ -118,6 +136,62 @@ public class Main {
         southPanel.repaint();
     }
 
+    private void changeColorOfAllObjects(Color color) {
+        switch (selectedFigureType) {
+            case 1 -> {
+                for (Line line : lines) line.setColor(color);
+            }
+            case 2 -> {
+                for (Circle circle : circles) circle.setColor(color);
+            }
+            case 3 -> {
+                for (Rectangle rectangle : rectangles) rectangle.setColor(color);
+            }
+            case 4 -> {
+                for (Triangle triangle : triangles) triangle.setColor(color);
+            }
+        }
+    }
+
+
+    private void createMultipleObject(int count) {
+        for (int i = 0; i < count; i++) {
+            int x1 = (int) (Math.random() * CONSTANTS.WITH);
+            int x2 = (int) (Math.random() * CONSTANTS.WITH);
+            int x3 = (int) (Math.random() * CONSTANTS.WITH);
+
+
+            int y1 = (int) (Math.random() * CONSTANTS.HEIGHT);
+            int y2 = (int) (Math.random() * CONSTANTS.HEIGHT);
+            int y3 = (int) (Math.random() * CONSTANTS.HEIGHT);
+            switch (selectedFigureType) {
+                case 1 -> {
+                    Line line = new Line(x1, y1, x2, y2, Color.RED);
+                    lines.add(line);
+                    centerPanel.add(line);
+                }
+                case 2 -> {
+                    Circle circle = new Circle(x1, y2, (int) (Math.random() * 300), Color.GREEN);
+                    circles.add(circle);
+                    centerPanel.add(circle);
+                }
+                case 3 -> {
+                    Rectangle rectangle = new Rectangle(x1, y1, x2, y2, Color.blue);
+                    rectangles.add(rectangle);
+                    centerPanel.add(rectangle);
+                }
+                case 4 -> {
+                    Triangle triangle = new Triangle(x1, y1, x2, y2, x3, y3, Color.black);
+                    triangles.add(triangle);
+                    centerPanel.add(triangle);
+                }
+            }
+        }
+        centerPanel.revalidate();
+        centerPanel.repaint();
+        updateFigureSelector();
+    }
+
     private void changeSizeOfSelectedFigure() {
         if (selectedIndex >= 0) {
             switch (selectedFigureType) {
@@ -141,8 +215,10 @@ public class Main {
         southPanel.add(bCircle);
         southPanel.add(bRectangle);
         southPanel.add(bTriangle);
+        southPanel.add(bDeleteAll);
         southPanel.revalidate();
         southPanel.repaint();
+        selectedFigureType = 0;
     }
 
     private void createFigure() {
@@ -248,12 +324,33 @@ public class Main {
     }
 
     private void deleteAllFigures() {
-        lines.clear();
-        circles.clear();
-        rectangles.clear();
-        triangles.clear();
+        System.out.println(selectedFigureType);
+        switch (selectedFigureType) {
+            case 1 -> {
+                for (Line line: lines) centerPanel.remove(line);
+                lines.clear();
+            }
+            case 2 -> {
+                for (Circle circle: circles) centerPanel.remove(circle);
+                circles.clear();
+            }
+            case 3 -> {
+                for (Rectangle rectangle: rectangles) centerPanel.remove(rectangle);
+                rectangles.clear();
+            }
+            case 4 -> {
+                for (Triangle triangle: triangles) centerPanel.remove(triangle);
+                triangles.clear();
+            }
+            case 0 -> {
+                lines.clear();
+                circles.clear();
+                rectangles.clear();
+                triangles.clear();
+                centerPanel.removeAll();
+            }
+        }
 
-        centerPanel.removeAll();
         centerPanel.revalidate();
         centerPanel.repaint();
         updateFigureSelector();
@@ -306,5 +403,4 @@ public class Main {
     public static void main(String[] argc) {
         SwingUtilities.invokeLater(Main::new);
     }
-
 }

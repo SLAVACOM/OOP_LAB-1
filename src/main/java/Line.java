@@ -15,6 +15,17 @@ class Line extends JComponent {
         this.y2 = y2;
         this.color = color;
         setBounds(0, 0, CONSTANTS.WITH, CONSTANTS.HEIGHT);
+        System.out.println(this.toString());
+    }
+
+    @Override
+    public String toString() {
+        return "Line{" +
+                "y2=" + y2 +
+                ", y1=" + y1 +
+                ", x2=" + x2 +
+                ", x1=" + x1 +
+                '}';
     }
 
     @Override
@@ -33,6 +44,11 @@ class Line extends JComponent {
         g2.rotate(Math.toRadians(angle), centerX, centerY);
         g2.drawLine(x1, y1, x2, y2);
         g2.setTransform(old);
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+        repaint();
     }
 
     public void moveTo(int dx, int dy) {

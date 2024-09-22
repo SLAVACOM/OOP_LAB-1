@@ -16,6 +16,12 @@ public class Rectangle extends JComponent {
         System.out.println(this.toString());
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+        repaint();
+
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -30,12 +36,14 @@ public class Rectangle extends JComponent {
     public void moveTo(int dx, int dy) {
         this.x += dx;
         this.y += dy;
-        setBounds(x, y,  CONSTANTS.WITH, CONSTANTS.HEIGHT);
+        setBounds(x, y, CONSTANTS.WITH, CONSTANTS.HEIGHT);
         repaint();
     }
+
     public boolean isVisible() {
         return visible;
     }
+
     public void show(boolean isVisible) {
         this.visible = isVisible;
         repaint();
@@ -44,7 +52,7 @@ public class Rectangle extends JComponent {
     public void resize(int newWidth, int newHeight) {
         this.width = newWidth;
         this.height = newHeight;
-        setBounds(x, y,  CONSTANTS.WITH, CONSTANTS.HEIGHT);
+        setBounds(x, y, CONSTANTS.WITH, CONSTANTS.HEIGHT);
         repaint();
     }
 

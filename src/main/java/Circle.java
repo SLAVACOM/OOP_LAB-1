@@ -11,7 +11,7 @@ public class Circle extends JComponent {
         this.y = y;
         this.r = r;
         this.color = color;
-        setBounds(0, 0, CONSTANTS.WITH, CONSTANTS.HEIGHT);
+        setBounds(x, y, CONSTANTS.WITH, CONSTANTS.HEIGHT);
         System.out.println(this.toString());
     }
 
@@ -28,6 +28,11 @@ public class Circle extends JComponent {
     public void moveTo(int dx, int dy) {
         this.x += dx;
         this.y += dy;
+        repaint();
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
         repaint();
     }
 
